@@ -1,0 +1,227 @@
+.project-card {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    border: 1px solid #e0e0e0;
+}
+
+.project-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.info-item {
+    padding: 8px;
+    border-radius: 4px;
+    background-color: #f8f9fa;
+}
+
+.info-item strong {
+    color: #495057;
+    font-size: 0.875rem;
+}
+
+.info-item p {
+    color: #212529;
+    font-weight: 500;
+}
+
+.notification-menu {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.notification-item {
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.notification-item:hover {
+    background-color: #f8f9fa;
+}
+
+.notification-item.unread {
+    background-color: #e3f2fd;
+    border-left: 3px solid #2196f3;
+}
+
+.notification-message {
+    font-size: 0.875rem;
+    line-height: 1.4;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .container-fluid {
+        padding: 0 15px;
+    }
+
+    .project-card {
+        margin-bottom: 1rem;
+    }
+
+    .info-item {
+        margin-bottom: 0.5rem;
+    }
+}
+
+/* Loading spinner customization */
+.spinner-border {
+    width: 3rem;
+    height: 3rem;
+}
+
+/* Badge styling */
+.badge {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+}
+
+/* Card header improvements */
+mat-card-header {
+    padding-bottom: 0;
+}
+
+mat-card-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+mat-card-subtitle {
+    color: #6c757d;
+    font-size: 0.875rem;
+}
+
+/* Status chip styling */
+mat-chip {
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+/* Button spacing */
+mat-card-actions {
+    padding: 16px;
+    margin: 0;
+}
+
+/* Header improvements */
+.bg-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+}
+
+/* Empty state styling */
+.display-1 {
+    font-size: 4rem;
+    opacity: 0.3;
+}
+
+/* Animation for new notifications */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.notification-item {
+    animation: slideIn 0.3s ease-out;
+}
+
+/* Table styling */
+.mat-mdc-table {
+    width: 100%;
+    background: white;
+}
+
+.mat-mdc-header-cell {
+    font-weight: 600;
+    color: #495057;
+    background-color: #f8f9fa;
+    border-bottom: 2px solid #dee2e6;
+}
+
+.mat-mdc-cell {
+    padding: 12px 16px;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.mat-mdc-row:hover {
+    background-color: #f8f9fa;
+}
+
+/* Description cell styling */
+.description-cell {
+    max-width: 300px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Filter section styling */
+.filter-section {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Search input styling */
+.mat-mdc-form-field {
+    width: 100%;
+}
+
+/* Pagination styling */
+.mat-mdc-paginator {
+    background-color: #f8f9fa;
+    border-top: 1px solid #dee2e6;
+}
+
+/* Filter form styling */
+.filter-form {
+    padding: 20px;
+}
+
+/* Clear button styling */
+.mat-mdc-stroked-button {
+    border-color: #6c757d;
+    color: #6c757d;
+}
+
+.mat-mdc-stroked-button:hover {
+    background-color: #6c757d;
+    color: white;
+}
+
+/* Sort header styling */
+.mat-sort-header-container {
+    align-items: center;
+}
+
+/* Action buttons styling */
+.action-buttons {
+    display: flex;
+    gap: 4px;
+}
+
+/* Card styling */
+mat-card {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+/* Error alert styling */
+.alert {
+    border-radius: 8px;
+    border: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+    border-left: 4px solid #dc3545;
+}

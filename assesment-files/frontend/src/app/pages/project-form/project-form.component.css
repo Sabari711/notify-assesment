@@ -1,0 +1,112 @@
+.form-label {
+    font-weight: 500;
+    color: #495057;
+    margin-bottom: 0.5rem;
+}
+
+.form-control {
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    padding: 0.5rem 0.75rem;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.form-control:focus {
+    border-color: #2196f3;
+    box-shadow: 0 0 0 0.2rem rgba(33, 150, 243, 0.25);
+}
+
+.btn {
+    border-radius: 4px;
+    font-weight: 500;
+    transition: all 0.2s ease-in-out;
+}
+
+.btn-primary {
+    background-color: #2196f3;
+    border-color: #2196f3;
+}
+
+.btn-primary:hover {
+    background-color: #1976d2;
+    border-color: #1976d2;
+}
+
+.btn-primary:disabled {
+    background-color: #bdbdbd;
+    border-color: #bdbdbd;
+}
+
+mat-form-field {
+    width: 100%;
+}
+
+.mat-mdc-form-field {
+    margin-bottom: 0.5rem;
+}
+
+mat-chip {
+    margin: 0.25rem;
+}
+
+.mat-mdc-chip {
+    background-color: #e3f2fd;
+    color: #1976d2;
+}
+
+.mat-mdc-chip.mat-mdc-chip-removable .mat-mdc-chip-remove {
+    color: #1976d2;
+}
+
+mat-dialog-content {
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+mat-dialog-actions {
+    border-top: 1px solid #e0e0e0;
+    margin: 0;
+    padding: 1rem;
+}
+
+.spinner-border-sm {
+    width: 1rem;
+    height: 1rem;
+}
+
+@media (max-width: 768px) {
+    .d-flex.gap-2 {
+        flex-direction: column;
+    }
+
+    .d-flex.gap-2>* {
+        margin-bottom: 0.5rem;
+    }
+
+    mat-dialog-content {
+        max-height: 60vh;
+    }
+}
+
+.mat-mdc-form-field.mat-form-field-invalid .mat-mdc-form-field-focus-overlay {
+    background-color: rgba(244, 67, 54, 0.1);
+}
+
+.mat-datepicker-toggle {
+    color: #2196f3;
+}
+
+textarea.mat-mdc-input-element {
+    resize: vertical;
+    min-height: 80px;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
