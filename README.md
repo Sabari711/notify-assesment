@@ -5,6 +5,21 @@ A full-stack project management application with real-time, user-specific notifi
 
 ---
 
+## How to Run & Test
+- Start backend and frontend as above
+- Register/login as different users (Admin/Viewer)
+- Create/update/delete projects to trigger notifications
+- Mark notifications as read/delete; verify persistence and per-user state
+- Test on desktop and mobile for responsive UI
+
+## Run project
+- git clone ( repo link )
+- npm install on frontend and backend files
+- ng serve -o for run frontend
+- npm run start:dev for run backend
+
+---
+
 ## Assessment Approach
 1. **Understand Requirements:**
    - Persistent, user-specific notifications (read/unread/delete per user)
@@ -51,21 +66,3 @@ graph TD;
 - Real-time, user-specific notifications (read/unread/delete)
 - Secure authentication (JWT)
 - Robust error handling and validation
-
----
-
-## How to Run & Test
-- Start backend and frontend as above
-- Register/login as different users (Admin/Viewer)
-- Create/update/delete projects to trigger notifications
-- Mark notifications as read/delete; verify persistence and per-user state
-- Test on desktop and mobile for responsive UI
-
-## Notes
-- Only backend-created notifications persist and support read/unread/delete
-- Local/test notifications in frontend are for demo only
-- For PowerShell, use `;` instead of `&&` to chain commands
-
----
-
-**For any questions or improvements, open an issue or contact the maintainer.** 

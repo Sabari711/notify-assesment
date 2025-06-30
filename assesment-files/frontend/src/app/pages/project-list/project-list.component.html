@@ -36,27 +36,26 @@
             <mat-icon [matBadge]="unreadCount" matBadgeColor="warn">notifications</mat-icon>
           </button>
           <mat-menu #notificationMenu="matMenu" class="notification-menu">
-            <div class="p-3" style="min-width: 450px; max-height: 500px;">
-              <div class="d-flex justify-content-between align-items-center mb-3">
-                <h6 class="mb-0">
-                  <mat-icon class="me-2">notifications</mat-icon>
-                  Notifications
-                  @if (unreadCount > 0) {
-                  <span class="badge bg-primary ms-2">{{ unreadCount }}</span>
-                  }
-                </h6>
-                <div class="d-flex gap-2">
-                  <button mat-button color="primary" size="small" (click)="markAllNotificationsAsRead()">
-                    <mat-icon>done_all</mat-icon>
-                    Mark All Read
-                  </button>
-                  <button mat-button color="warn" size="small" (click)="clearAllNotifications()">
-                    <mat-icon>clear_all</mat-icon>
-                    Clear All
-                  </button>
-                </div>
+            <div class="notification-header">
+              <div class="d-flex align-items-center">
+                <mat-icon class="me-2">notifications</mat-icon>
+                <span>Notifications</span>
+                @if (unreadCount > 0) {
+                <span class="notification-badge ms-2">{{ unreadCount }}</span>
+                }
               </div>
-
+              <div class="d-flex gap-2">
+                <button mat-button color="primary" size="small" (click)="markAllNotificationsAsRead()">
+                  <mat-icon>done_all</mat-icon>
+                  Mark All Read
+                </button>
+                <button mat-button color="warn" size="small" (click)="clearAllNotifications()">
+                  <mat-icon>clear_all</mat-icon>
+                  Clear All
+                </button>
+              </div>
+            </div>
+            <div class="p-3">
               <!-- Notification Loading State -->
               @if (notificationLoading) {
               <div class="notification-loading">
@@ -64,7 +63,6 @@
                 <p class="mt-2">Loading notifications...</p>
               </div>
               }
-
               <!-- Notification Error State -->
               @if (notificationError) {
               <div class="notification-error">
@@ -76,7 +74,6 @@
                 </button>
               </div>
               }
-
               <!-- Notification Empty State -->
               @if (!notificationLoading && !notificationError && notifications.length === 0) {
               <div class="notification-empty">
@@ -86,37 +83,31 @@
                   deleted.</small>
               </div>
               }
-
               <!-- Notifications List -->
               @if (!notificationLoading && !notificationError && notifications.length > 0) {
               <div class="notification-list">
                 @for (notification of notifications; track notification.id) {
-                <div class="notification-item p-3 mb-2" [class.unread]="!notification.read"
-                  [attr.data-type]="notification.type" (click)="markNotificationAsRead(notification)">
-                  <div class="d-flex justify-content-between align-items-start">
-                    <div class="flex-grow-1">
-                      <div class="d-flex align-items-center mb-1">
-                        <mat-icon class="me-2" [ngClass]="getNotificationIcon(notification.type)">
-                          {{ getNotificationIcon(notification.type) }}
-                        </mat-icon>
-                        <span class="notification-message">{{ notification.message }}</span>
-                        @if (!notification.read) {
-                        <span class="badge bg-primary ms-2 notification-badge">New</span>
-                        }
-                      </div>
-                      <small class="notification-timestamp">
-                        {{ getRelativeTime(notification.timestamp) }}
-                      </small>
-                    </div>
-                    <button mat-icon-button size="small"
-                      (click)="$event.stopPropagation(); deleteNotification(notification)">
-                      <mat-icon>close</mat-icon>
-                    </button>
+                <div class="notification-item" [class.unread]="!notification.read" [attr.data-type]="notification.type"
+                  (click)="markNotificationAsRead(notification)">
+                  <div class="notification-icon-bg">
+                    <mat-icon>{{ getNotificationIcon(notification.type) }}</mat-icon>
                   </div>
+                  <div class="flex-grow-1">
+                    <span class="notification-message">{{ notification.message }}</span>
+                    @if (!notification.read) {
+                    <span class="notification-badge ms-2">New</span>
+                    }
+                    <div>
+                      <small class="notification-timestamp">{{ getRelativeTime(notification.timestamp) }}</small>
+                    </div>
+                  </div>
+                  <button mat-icon-button size="small"
+                    (click)="$event.stopPropagation(); deleteNotification(notification)">
+                    <mat-icon>close</mat-icon>
+                  </button>
                 </div>
                 }
               </div>
-
               <!-- Notification Actions -->
               <div class="notification-actions">
                 <div class="d-flex justify-content-between align-items-center">
@@ -156,11 +147,11 @@
   <div class="container-xl">
 
     <!-- Filters Section -->
-    <div class="row mb-4">
+    <div class="row mb-4 align-items-center">
       <div class="col-12">
         <mat-card class="filter-card">
           <mat-card-content>
-            <form [formGroup]="filterForm" class="filter-form">
+            <form [formGroup]="filterForm" class="filter-form align-items-center">
               <div class="col-md-4">
                 <mat-form-field appearance="outline" class="w-100">
                   <mat-label>Search Projects</mat-label>
@@ -178,8 +169,8 @@
                   </mat-select>
                 </mat-form-field>
               </div>
-              <div class="col-md-2">
-                <button mat-button type="button" (click)="clearFilters()">
+              <div class="col-md-2 pb-4">
+                <button mat-raised-button color="primary" type="button" (click)="clearFilters()">
                   <mat-icon>clear</mat-icon>
                   Clear
                 </button>
