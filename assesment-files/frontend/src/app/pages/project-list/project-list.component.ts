@@ -23,6 +23,7 @@ import { ProjectApiService, Project, ProjectResponse, ProjectFilters } from '../
 import { NotificationService, Notification } from '../../_services/notification.service';
 import { UserApiService } from '../../_services/user-api.service';
 import { ProjectFormComponent } from '../project-form/project-form.component';
+import { DeleteConfirmationDialogComponent, DeleteConfirmationData } from './delete-confirmation-dialog.component';
 
 @Component({
   selector: 'app-project-list',
@@ -81,11 +82,15 @@ export class ProjectListComponent implements OnInit, OnDestroy {
   error = '';
   unreadCount = 0;
 
+  // Notification states
+  notificationLoading = false;
+  notificationError = '';
+
   private subscription = new Subscription();
 
   constructor(
     private projectService: ProjectApiService,
-    private notificationService: NotificationService,
+    public notificationService: NotificationService,
     private userService: UserApiService,
     private dialog: MatDialog,
     private router: Router,
@@ -103,6 +108,7 @@ export class ProjectListComponent implements OnInit, OnDestroy {
     this.loadProjects();
     this.setupNotifications();
     this.setupLiveUpdates();
+    this.getNotificationBasedUser()
   }
 
   ngAfterViewInit(): void {
@@ -126,6 +132,11 @@ export class ProjectListComponent implements OnInit, OnDestroy {
           if (this.userRole !== 'admin') {
             this.displayedColumns = this.displayedColumns.filter(col => col !== 'actions');
           }
+
+          // Reload notifications after user data is loaded with a small delay
+          setTimeout(() => {
+            this.reloadNotifications();
+          }, 500);
         },
         error: (error) => {
           console.error('Error loading user data:', error);
@@ -157,7 +168,7 @@ export class ProjectListComponent implements OnInit, OnDestroy {
     );
   }
 
-  private loadProjects(): void {
+  public loadProjects(): void {
     this.loading = true;
     this.error = '';
 
@@ -188,18 +199,34 @@ export class ProjectListComponent implements OnInit, OnDestroy {
     );
   }
 
+  async getNotificationBasedUser() {
+    this.notificationService.getUnreadNotifications().subscribe({
+      next(data) {
+        console.log(data, "getNotificationBasedUser")
+      },
+      error(err) {
+        console.log(err, "getNotificationBasedUser err")
+      },
+    })
+  }
+
   private setupNotifications(): void {
     this.subscription.add(
       this.notificationService.getNotifications().subscribe(notifications => {
         this.notifications = notifications;
+        console.log('📋 Current notifications:', notifications);
       })
     );
 
     this.subscription.add(
       this.notificationService.getUnreadCount().subscribe(count => {
         this.unreadCount = count;
+        console.log('🔢 Unread count:', count);
       })
     );
+
+    // Log connection status
+    console.log('🔌 WebSocket connection status:', this.notificationService.getConnectionStatus());
   }
 
   private setupLiveUpdates(): void {
@@ -249,20 +276,27 @@ export class ProjectListComponent implements OnInit, OnDestroy {
   }
 
   deleteProject(project: Project): void {
-    if (confirm(`Are you sure you want to delete project "${project.name}"?`)) {
-      this.subscription.add(
-        this.projectService.deleteProject(project.id!).subscribe({
-          next: () => {
-            this.loadProjects();
-            this.notificationService.addProjectNotification(project.name, 'was deleted', 'warning');
-          },
-          error: (error) => {
-            console.error('Error deleting project:', error);
-            this.notificationService.addNotification('Failed to delete project', 'error');
-          }
-        })
-      );
-    }
+    const dialogRef = this.dialog.open(DeleteConfirmationDialogComponent, {
+      width: '400px',
+      data: { projectName: project.name }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.subscription.add(
+          this.projectService.deleteProject(project.id!).subscribe({
+            next: () => {
+              this.loadProjects();
+              this.notificationService.addNotification(`Project "${project.name}" was deleted`, 'warning');
+            },
+            error: (error) => {
+              console.error('Error deleting project:', error);
+              this.notificationService.addNotification('Failed to delete project', 'error');
+            }
+          })
+        );
+      }
+    });
   }
 
   markNotificationAsRead(notification: Notification): void {
@@ -280,9 +314,9 @@ export class ProjectListComponent implements OnInit, OnDestroy {
   getStatusColor(status: string): string {
     switch (status) {
       case 'active': return 'primary';
-      case 'completed': return 'success';
+      case 'completed': return 'accent';
       case 'pending': return 'warn';
-      default: return 'default';
+      default: return 'primary';
     }
   }
 
@@ -293,5 +327,60 @@ export class ProjectListComponent implements OnInit, OnDestroy {
 
   isAdmin(): boolean {
     return this.userRole === 'admin';
+  }
+
+  testNotification(): void {
+    this.notificationService.addNotification('This is a test notification', 'info');
+  }
+
+  // New notification methods
+  reloadNotifications(): void {
+    this.notificationLoading = true;
+    this.notificationError = '';
+
+    this.notificationService.reloadNotifications();
+
+    // Simulate loading state (remove this in production)
+    setTimeout(() => {
+      this.notificationLoading = false;
+    }, 1000);
+  }
+
+  deleteNotification(notification: Notification): void {
+    // Remove from local array immediately for better UX
+    this.notifications = this.notifications.filter(n => n.id !== notification.id);
+
+    // Call API to delete from database
+    this.notificationService.deleteNotification(notification.id);
+  }
+
+  getNotificationIcon(type: string): string {
+    switch (type) {
+      case 'project_created': return 'add_circle';
+      case 'project_updated': return 'edit';
+      case 'project_deleted': return 'delete';
+      default: return 'notifications';
+    }
+  }
+
+  getRelativeTime(timestamp: Date | string): string {
+    const date = new Date(timestamp);
+    const now = new Date();
+    const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+
+    if (diffInSeconds < 60) {
+      return 'Just now';
+    } else if (diffInSeconds < 3600) {
+      const minutes = Math.floor(diffInSeconds / 60);
+      return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
+    } else if (diffInSeconds < 86400) {
+      const hours = Math.floor(diffInSeconds / 3600);
+      return `${hours} hour${hours > 1 ? 's' : ''} ago`;
+    } else if (diffInSeconds < 2592000) {
+      const days = Math.floor(diffInSeconds / 86400);
+      return `${days} day${days > 1 ? 's' : ''} ago`;
+    } else {
+      return date.toLocaleDateString();
+    }
   }
 }

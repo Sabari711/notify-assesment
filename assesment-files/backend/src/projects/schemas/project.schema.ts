@@ -11,23 +11,8 @@ export class Project {
     @Prop()
     description: string;
 
-    @Prop({ default: 'pending' })
+    @Prop({ default: 'pending', enum: ['pending', 'active', 'completed'] })
     status: string;
-
-    @Prop({ required: true })
-    startDate: Date;
-
-    @Prop()
-    endDate: Date;
-
-    @Prop({ required: true, min: 0 })
-    budget: number;
-
-    @Prop({ required: true })
-    manager: string;
-
-    @Prop({ type: [String], default: [] })
-    teamMembers: string[];
 
     @Prop({ type: Types.ObjectId, ref: 'User', required: true })
     createdBy: Types.ObjectId;

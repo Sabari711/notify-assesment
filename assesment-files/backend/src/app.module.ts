@@ -5,6 +5,7 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { ProjectsModule } from './projects/projects.module';
 import { WebsocketModule } from './websocket/websocket.module';
+import { NotificationsModule } from './notifications/notifications.module';
 
 @Module({
     imports: [
@@ -16,6 +17,7 @@ import { WebsocketModule } from './websocket/websocket.module';
         UsersModule,
         ProjectsModule,
         WebsocketModule,
+        NotificationsModule,
     ],
 })
 export class AppModule { } 

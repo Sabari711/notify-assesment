@@ -30,7 +30,7 @@
             </div>
 
             <!-- Status -->
-            <div class="col-md-6">
+            <div class="col-12">
                 <mat-form-field appearance="outline" class="w-100">
                     <mat-label>Status</mat-label>
                     <mat-select formControlName="status">
@@ -42,90 +42,6 @@
                     <mat-error>{{ getErrorMessage('status') }}</mat-error>
                     }
                 </mat-form-field>
-            </div>
-
-            <!-- Budget -->
-            <div class="col-md-6">
-                <mat-form-field appearance="outline" class="w-100">
-                    <mat-label>Budget ($)</mat-label>
-                    <input matInput type="number" placeholder="Enter budget amount" formControlName="budget" min="0"
-                        step="0.01">
-                    @if (projectForm.get('budget')?.invalid && projectForm.get('budget')?.touched) {
-                    <mat-error>{{ getErrorMessage('budget') }}</mat-error>
-                    }
-                </mat-form-field>
-            </div>
-
-            <!-- Start Date -->
-            <div class="col-md-6">
-                <mat-form-field appearance="outline" class="w-100">
-                    <mat-label>Start Date</mat-label>
-                    <input matInput [matDatepicker]="startPicker" placeholder="Choose start date"
-                        formControlName="startDate">
-                    <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
-                    <mat-datepicker #startPicker></mat-datepicker>
-                    @if (projectForm.get('startDate')?.invalid && projectForm.get('startDate')?.touched) {
-                    <mat-error>{{ getErrorMessage('startDate') }}</mat-error>
-                    }
-                </mat-form-field>
-            </div>
-
-            <!-- End Date -->
-            <div class="col-md-6">
-                <mat-form-field appearance="outline" class="w-100">
-                    <mat-label>End Date (Optional)</mat-label>
-                    <input matInput [matDatepicker]="endPicker" placeholder="Choose end date" formControlName="endDate">
-                    <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
-                    <mat-datepicker #endPicker></mat-datepicker>
-                    @if (projectForm.get('endDate')?.invalid && projectForm.get('endDate')?.touched) {
-                    <mat-error>{{ getErrorMessage('endDate') }}</mat-error>
-                    }
-                </mat-form-field>
-            </div>
-
-            <!-- Manager -->
-            <div class="col-12">
-                <mat-form-field appearance="outline" class="w-100">
-                    <mat-label>Project Manager</mat-label>
-                    <input matInput placeholder="Enter project manager name" formControlName="manager">
-                    @if (projectForm.get('manager')?.invalid && projectForm.get('manager')?.touched) {
-                    <mat-error>{{ getErrorMessage('manager') }}</mat-error>
-                    }
-                </mat-form-field>
-            </div>
-
-            <!-- Team Members -->
-            <div class="col-12">
-                <div class="d-flex justify-content-between align-items-center mb-2">
-                    <label class="form-label">Team Members</label>
-                    <button type="button" mat-mini-fab color="primary" (click)="addTeamMember()">
-                        <mat-icon>add</mat-icon>
-                    </button>
-                </div>
-
-                <div formArrayName="teamMembers">
-                    @for (member of teamMembers.controls; track $index) {
-                    <div class="d-flex gap-2 mb-2">
-                        <mat-form-field appearance="outline" class="flex-grow-1">
-                            <mat-label>Team Member {{ $index + 1 }}</mat-label>
-                            <input matInput [formControlName]="$index" placeholder="Enter team member name">
-                            @if (member.invalid && member.touched) {
-                            <mat-error>{{ getTeamMemberErrorMessage($index) }}</mat-error>
-                            }
-                        </mat-form-field>
-                        <button type="button" mat-icon-button color="warn" (click)="removeTeamMember($index)">
-                            <mat-icon>delete</mat-icon>
-                        </button>
-                    </div>
-                    }
-                </div>
-
-                @if (teamMembers.length === 0) {
-                <div class="text-muted text-center py-3">
-                    <mat-icon>group</mat-icon>
-                    <p class="mb-0">No team members added yet. Click the + button to add team members.</p>
-                </div>
-                }
             </div>
         </div>
     </form>

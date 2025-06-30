@@ -1,5 +1,4 @@
-import { IsString, IsOptional, IsDateString, IsNumber, IsIn, Min, Max, IsArray, IsDate } from 'class-validator';
-import { Transform, Type } from 'class-transformer';
+import { IsString, IsOptional, IsIn } from 'class-validator';
 
 export class CreateProjectDto {
     @IsString()
@@ -13,27 +12,6 @@ export class CreateProjectDto {
     @IsOptional()
     @IsIn(['pending', 'active', 'completed'])
     status?: string;
-
-    @IsDate()
-    @Type(() => Date)
-    startDate: Date;
-
-    @IsDate()
-    @Type(() => Date)
-    @IsOptional()
-    endDate?: Date;
-
-    @IsNumber()
-    @Min(0)
-    budget: number;
-
-    @IsString()
-    manager: string;
-
-    @IsArray()
-    @IsString({ each: true })
-    @IsOptional()
-    teamMembers?: string[];
 }
 
 export class UpdateProjectDto {
@@ -49,30 +27,6 @@ export class UpdateProjectDto {
     @IsOptional()
     @IsIn(['pending', 'active', 'completed'])
     status?: string;
-
-    @IsDate()
-    @Type(() => Date)
-    @IsOptional()
-    startDate?: Date;
-
-    @IsDate()
-    @Type(() => Date)
-    @IsOptional()
-    endDate?: Date;
-
-    @IsNumber()
-    @Min(0)
-    @IsOptional()
-    budget?: number;
-
-    @IsString()
-    @IsOptional()
-    manager?: string;
-
-    @IsArray()
-    @IsString({ each: true })
-    @IsOptional()
-    teamMembers?: string[];
 }
 
 export class ProjectResponseDto {
@@ -80,11 +34,6 @@ export class ProjectResponseDto {
     name: string;
     description?: string;
     status: string;
-    startDate: Date;
-    endDate?: Date;
-    budget: number;
-    manager: string;
-    teamMembers: string[];
     createdBy: string;
     createdAt: Date;
     updatedAt: Date;
@@ -92,21 +41,14 @@ export class ProjectResponseDto {
 
 export class QueryProjectDto {
     @IsOptional()
-    @Transform(({ value }) => parseInt(value))
-    @IsNumber()
-    @Min(1)
     page?: number = 1;
 
     @IsOptional()
-    @Transform(({ value }) => parseInt(value))
-    @IsNumber()
-    @Min(1)
-    @Max(100)
     limit?: number = 10;
 
     @IsOptional()
     @IsString()
-    @IsIn(['name', 'description', 'status', 'startDate', 'endDate', 'budget', 'manager', 'createdAt', 'updatedAt'])
+    @IsIn(['name', 'description', 'status', 'createdAt', 'updatedAt'])
     sortBy?: string = 'createdAt';
 
     @IsOptional()

@@ -7,12 +7,7 @@ export interface Project {
     id?: string;
     name: string;
     description?: string;
-    status?: 'active' | 'completed' | 'pending';
-    startDate: Date | string;
-    endDate?: Date | string;
-    budget: number;
-    manager: string;
-    teamMembers: string[];
+    status?: 'pending' | 'active' | 'completed';
     createdBy?: string;
     createdAt?: Date | string;
     updatedAt?: Date | string;

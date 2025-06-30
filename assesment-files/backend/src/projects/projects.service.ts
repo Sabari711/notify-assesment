@@ -4,6 +4,7 @@ import { Model } from 'mongoose';
 import { Project, ProjectDocument } from './schemas/project.schema';
 import { CreateProjectDto, UpdateProjectDto, ProjectResponseDto, QueryProjectDto, PaginatedProjectsResponseDto } from '../common/dto/project.dto';
 import { NotificationService } from '../websocket/notification.service';
+import { NotificationsService } from '../notifications/notifications.service';
 import { NotificationType } from '../common/dto/notification.dto';
 
 @Injectable()
@@ -11,6 +12,7 @@ export class ProjectsService {
     constructor(
         @InjectModel(Project.name) private projectModel: Model<ProjectDocument>,
         private notificationService: NotificationService,
+        private notificationsService: NotificationsService,
     ) { }
 
     async create(createProjectDto: CreateProjectDto, userId: string): Promise<ProjectResponseDto> {
@@ -22,11 +24,19 @@ export class ProjectsService {
         const savedProject = await project.save();
         const projectResponse = await this.mapToResponseDto(savedProject);
 
-        // Send notification
-        this.notificationService.notifyAll({
+        // Create notification data
+        const notificationData = {
             type: NotificationType.PROJECT_CREATED,
             message: `New project "${projectResponse.name}" has been created`,
             data: projectResponse,
+        };
+
+        // Save notification to database
+        await this.notificationsService.create(notificationData);
+
+        // Send WebSocket notification to all users
+        this.notificationService.notifyAll({
+            ...notificationData,
             timestamp: new Date(),
         });
 
@@ -42,8 +52,7 @@ export class ProjectsService {
         if (search) {
             filter.$or = [
                 { name: { $regex: search, $options: 'i' } },
-                { description: { $regex: search, $options: 'i' } },
-                { manager: { $regex: search, $options: 'i' } }
+                { description: { $regex: search, $options: 'i' } }
             ];
         }
 
@@ -119,11 +128,19 @@ export class ProjectsService {
 
         const projectResponse = this.mapToResponseDto(updatedProject);
 
-        // Send notification
-        this.notificationService.notifyAll({
+        // Create notification data
+        const notificationData = {
             type: NotificationType.PROJECT_UPDATED,
             message: `Project "${projectResponse.name}" has been updated`,
             data: projectResponse,
+        };
+
+        // Save notification to database
+        await this.notificationsService.create(notificationData);
+
+        // Send WebSocket notification to all users
+        this.notificationService.notifyAll({
+            ...notificationData,
             timestamp: new Date(),
         });
 
@@ -145,11 +162,19 @@ export class ProjectsService {
         const projectName = project.name;
         await this.projectModel.findByIdAndDelete(id).exec();
 
-        // Send notification
-        this.notificationService.notifyAll({
+        // Create notification data
+        const notificationData = {
             type: NotificationType.PROJECT_DELETED,
             message: `Project "${projectName}" has been deleted`,
             data: { id },
+        };
+
+        // Save notification to database
+        await this.notificationsService.create(notificationData);
+
+        // Send WebSocket notification to all users
+        this.notificationService.notifyAll({
+            ...notificationData,
             timestamp: new Date(),
         });
     }
@@ -160,11 +185,6 @@ export class ProjectsService {
             name: project.name,
             description: project.description,
             status: project.status,
-            startDate: project.startDate,
-            endDate: project.endDate,
-            budget: project.budget,
-            manager: project.manager,
-            teamMembers: project.teamMembers || [],
             createdBy: project.createdBy.toString(),
             createdAt: project.createdAt || new Date(),
             updatedAt: project.updatedAt || new Date(),
